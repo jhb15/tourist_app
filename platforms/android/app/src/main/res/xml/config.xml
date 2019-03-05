@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="uk.ac.aber.dcs.jhb15.tour" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <feature name="Battery">
+        <param name="android-package" value="org.apache.cordova.batterystatus.BatteryListener" />
+    </feature>
+    <feature name="Camera">
+        <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
+    </feature>
+    <feature name="File">
+        <param name="android-package" value="org.apache.cordova.file.FileUtils" />
+        <param name="onload" value="true" />
+    </feature>
+    <allow-navigation href="cdvfile:*" />
+    <feature name="Capture">
+        <param name="android-package" value="org.apache.cordova.mediacapture.Capture" />
+    </feature>
+    <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device" />
+    </feature>
+    <feature name="Notification">
+        <param name="android-package" value="org.apache.cordova.dialogs.Notification" />
+    </feature>
+    <feature name="Geolocation">
+        <param name="android-package" value="org.apache.cordova.geolocation.Geolocation" />
+    </feature>
+    <feature name="Globalization">
+        <param name="android-package" value="org.apache.cordova.globalization.Globalization" />
+    </feature>
+    <feature name="InAppBrowser">
+        <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
+    </feature>
+    <feature name="NetworkStatus">
+        <param name="android-package" value="org.apache.cordova.networkinformation.NetworkManager" />
+    </feature>
+    <feature name="Vibration">
+        <param name="android-package" value="org.apache.cordova.vibration.Vibration" />
+    </feature>
+    <feature name="Whitelist">
+        <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
+        <param name="onload" value="true" />
+    </feature>
+    <name>I'm A Tourist App</name>
+    <description>Log visits to Tourist destinations attaching description, notes, a picture, etc...</description>
+    <author email="jhb15@aber.ac.uk" href="http://users.aber.ac.uk/jhb15">
+    James Britton
+  </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <access origin="http://*.phonegap.com" subdomains="true" />
+    <access origin="*://*.googleapis.com/*" subdomains="true" />
+    <access origin="*://*.gstatic.com/*" subdomains="true" />
+    <access origin="*://*.google.com/*" subdomains="true" />
+    <access origin="*://*.googleusercontent.com/*" subdomains="true" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <icon density="mdpi" src="www/res/icon/android/tourist_launcger/res/mipmap-mdpi/tourist_launcger.png" />
+    <icon density="hdpi" src="www/res/icon/android/tourist_launcger/res/mipmap-hdpi/tourist_launcger.png" />
+    <icon density="xhdpi" src="www/res/icon/android/tourist_launcger/res/mipmap-xhdpi/tourist_launcger.png" />
+    <allow-intent href="market:*" />
+    <preference name="loglevel" value="DEBUG" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="android-minSdkVersion" value="14" />
+</widget>

@@ -1,0 +1,49 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-battery-status": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-media-capture": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-globalization": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-vibration": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "uk.ac.aber.dcs.jhb15.tour"
+    }
+  }
+}

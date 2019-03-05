@@ -1,0 +1,17 @@
+{
+  "name": "uk.ac.aber.dcs.jhb15.tour",
+  "version": "1.0.0",
+  "displayName": "I'm A Tourist App",
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-camera": {}
+    }
+  },
+  "dependencies": {
+    "cordova-android": "~7.1.4"
+  }
+}
