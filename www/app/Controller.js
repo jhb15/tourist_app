@@ -30,8 +30,6 @@ Tourist.controller = (function ($, dataContext, document) {
     var initialisePage = function (event) {
         change_page_back_history();
         initiate_geolocation();
-        /*pictureSource=navigator.camera.PictureSourceType;
-        destinationType=navigator.camera.DestinationType;*/
     };
 
     var onPageChange = function (event, data) {
@@ -61,7 +59,59 @@ Tourist.controller = (function ($, dataContext, document) {
         }
     };
 
-    var renderVisitsList = function (visitsList) {
+    /**
+     * Function for redering a list of visits to the screen when on the list page of the application. This is a modified version of the renderSessions
+     * finction privided by Chris Loftus in the Confrence App example.
+     * @param visitsList This is an list of all the visits stored in the local IndexedDB instance.
+     */
+    var renderVisitsList = function(visitsList) {
+        var view = $(visitsListSelector);
+        var visitCount = visitsList.length;
+
+        view.empty();
+
+        if (visitCount === 0) {
+            $(noVisitsCachedMsg).appendTo(view);
+        } else {
+            var filterForm = $("<form class=\"ui-filterable\">");
+            var inputField = $("<input id=\"myFilter\" data-type=\"search\" placeholder=\"Search for visits...\">");
+            inputField.appendTo(filterForm);
+            filterForm.appendTo(view);
+
+            var ul = $("<ul id=\"visit-list\" data-role=\"listview\" data-filter=\"true\" data-input=\"#myFilter\"></ul>").appendTo(view);
+
+            for(var i = 0; i < visitCount; i += 1) {
+                var visit = visitsList[i];
+                var id = visit.id;
+                var date = new Date(visit.datetime);
+
+                var listItem = $("<li>")
+                var a_tag = $("<a href=\"\">").appendTo(listItem);
+                a_tag.click({id}, toggleMoreDetail);
+                var span = $("<span class=\"visit-list-item\">").appendTo(a_tag);
+                $("<img src=\"" + visit.photo_data + "\">"). appendTo(span);
+                var div = $("<div>").appendTo(span);
+                $("<h3>" + visit.id + ". " + visit.description + "</h3>").appendTo(div);
+                $("<h6>Date: " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "</h6>").appendTo(div);
+                $("<h6>Time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "</h6>").appendTo(div);
+                $("<br>").appendTo(span);
+                var mDDiv = $("<div id=\"more-detail-" + visit.id + "\" class=\"more-detail\">").appendTo(span);
+                $("<h6>Lat: " + visit.latitude + " Lon:" + visit.longitude + "</h6>").appendTo(mDDiv);
+                $("<h6>Notes: </h6>").appendTo(mDDiv);
+                $("<p>" + visit.notes + "</p>").appendTo(mDDiv);
+                
+                //$("<button>Edit</button>").appendTo(mDDiv); //For Future Use
+                //$("<button>Delete</button>").appendTo(mDDiv);
+
+                listItem.appendTo(ul);
+            }
+            ul = ul.appendTo(view);
+
+            ul.listview();
+        }
+    };
+
+    /*var renderVisitsList = function (visitsList) {
 
         var view = $(visitsListSelector);
 
@@ -91,20 +141,21 @@ Tourist.controller = (function ($, dataContext, document) {
                 visit = visitsList[i];
                 var date = new Date(visit.datetime);
 
-                listItem = listItem + "<a href=\"\">";  //TODO make this show the notes from the visit.
+                listItem = listItem + "<a onclick=\"toggleMoreDetail(" + visit.id + ");\" href=\"\">";  //TODO make this show the notes from the visit.
 
-                liArray.push(listItem
+                liArray.push(listItemid
                     + "<span class='visit-list-item'>"
                     + "<img src=\"" + visit.photo_data + "\"></img>"
                     + "<div>"
                     + "<h3>" + visit.id + ". " + visit.description + "</h3>"
                     + "<h6>Date: " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "</h6>"
                     + "<h6>Time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "</h6>"
-                    + "<h6>Lat: " + visit.latitude + "</h6>"
-                    + "<h6>Lon:" + visit.longitude + "</h6>" //Properly Format
                     + "</div>"
+                    + "<div id=\"more-detail-" + visit.id + "\" class=\"more-detail\">"
+                    + "<h6>Lat: " + visit.latitude + " Lon:" + visit.longitude + "</h6>" //Properly Format
                     + "<h6>Notes: </h6>" //Properly Format
                     + "<p>" + visit.notes + "</p>" //Properly Format
+                    + "</div>"
                     + "</span>"
                     + "</a>"
                     + "</li>");
@@ -115,16 +166,32 @@ Tourist.controller = (function ($, dataContext, document) {
 
             ul.listview();
         }
+    };*/
+
+    /**
+     * Function for showing the more detail for a selected visit on the list page.
+     * @param input object containing data to be passed to this function.
+     */
+    var toggleMoreDetail = function(input) {
+        var mDID = "more-detail-" + input.data.id;
+        var moreDetailElement = document.getElementById(mDID);
+        if (moreDetailElement != null) {
+            var currentVal = moreDetailElement.style.display;
+            if (currentVal === 'none') {
+                moreDetailElement.style.display = 'block';
+            } else {
+                moreDetailElement.style.display = 'none';
+            }
+        } else {
+            console.log(id);
+            console.log("Error Toggleing MoreDetail, Visit ID:" + input.data.id);
+        }
     };
 
     var renderAddVisit = function () {
         var form = $(newVisitFormSelector);
-        //var phoneGapApp = (document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1 );
 
         form.empty();
-        
-        //var imageInput = $("<input type=\"file\" name=\"uploader\" id=\"uploader\" accept=\"image/*\"/></br>");
-        //imageInput.appendTo(view);
 
         $("<label>Short Desctription:</label>").appendTo(form);
         $("<input type=\"text\" name=\"description\"/></br>").appendTo(form);
@@ -197,9 +264,9 @@ Tourist.controller = (function ($, dataContext, document) {
 
     var initiate_geolocation = function () { //TODO:Mod
 
-        // Do we have built-in support for geolocation (either native browser or phonegap)?
+        // Do we have built-in support for geolocation (either native browser or phonegap)?]
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(handle_geolocation_query, handle_errors);
+            navigator.geolocation.getCurrentPosition(handle_geolocation_query, handle_errors, {timeout: 10000, enableHighAccuracy: false});
         }
         else {
             // We don't so let's try a polyfill
@@ -260,18 +327,16 @@ Tourist.controller = (function ($, dataContext, document) {
     var build_markers_string = function() {  //TODO Needs to be build based on the stored information we have in the DB.
 
         //gVisitList
-        console.log(gVisitList);
-        var count = gVisitList.length;
+        console.log("gVisitList Value: " + gVisitList);
         var markers_string = "";
 
-        for(var i = 0; i < count; i += 1) {
-            var visit = gVisitList[i];
-            markers_string += "&markers=color:red%7Clabel:" + visit.id + "%7C" + visit.latitude + "," + visit.longitude;
+        if (gVisitList != null) {
+            var count = gVisitList.length;
+            for(var i = 0; i < count; i += 1) {
+                var visit = gVisitList[i];
+                markers_string += "&markers=color:red%7Clabel:" + visit.id + "%7C" + visit.latitude + "," + visit.longitude;
+            }
         }
-
-        /*var markers_string = "&markers=color:red%7Clabel:A%7C52.414487,-4.084870" +
-        "&markers=color:blue%7Clabel:B%7C52.415969,-4.085358" +
-        "&markers=color:green%7Clabel:C%7C52.414098,-4.086624";*/
     
         return markers_string;
     }

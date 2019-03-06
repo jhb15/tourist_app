@@ -148,4 +148,10 @@ List formatting
 
 .visit-list-item p {
     word-break: break-word;
+    font-size: 0.65em;
+}
+
+.visit-list-item .more-detail {
+    display: none;
+    width: 100%;
 }

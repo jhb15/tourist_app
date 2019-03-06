@@ -1,4 +1,4 @@
-# I'm A Tourist App
+# I'm A Tourist App (SEM2220 Assignment)
 
 A JQuery Mobile & Phonegap application for loging visits to places, storing a photo, location and notes. It also provides the ability view these visits on a map. This Application was developed as part of my SEM2220 Mobile Web Assignment in my Final Year at University.
 
