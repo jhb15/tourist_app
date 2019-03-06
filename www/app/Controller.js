@@ -366,8 +366,12 @@ Tourist.controller = (function ($, dataContext, document) {
         mapDisplayed = true;
     };
 
+    /**
+     * Clears the table once a Visit has been successfully added. Also notifys the user of this action.
+     */
     var visitAdded = function() {
-        //TODO Implement
+        renderAddVisit();
+        alert("New Visit Added");
     }
 
     var add_visit = function (values) {
