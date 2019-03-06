@@ -18,7 +18,9 @@ Tourist.controller = (function ($, dataContext, document) {
         MAP_PAGE = "map";
 
     var pictureSource;   // picture source
-    var destinationType; // sets the format of returned value 
+    var destinationType; // sets the format of returned value
+
+    var gVisitList = null;
 
     // This changes the behaviour of the anchor <a> link
     // so that when we click an anchor link we change page without
@@ -48,7 +50,9 @@ Tourist.controller = (function ($, dataContext, document) {
                 dataContext.allVisits(renderVisitsList);
                 break;
             case MAP_PAGE:
-                //dataContext.addVisits();
+                dataContext.allVisits(function(visits) {
+                    gVisitList = visits;
+                }); //TODO plot visits!
                 if (!mapDisplayed || (currentMapWidth != get_map_width() ||
                     currentMapHeight != get_map_height())) {
                     deal_with_geolocation();
@@ -255,9 +259,19 @@ Tourist.controller = (function ($, dataContext, document) {
 
     var build_markers_string = function() {  //TODO Needs to be build based on the stored information we have in the DB.
 
-        var markers_string = "&markers=color:red%7Clabel:A%7C52.414487,-4.084870" +
+        //gVisitList
+        console.log(gVisitList);
+        var count = gVisitList.length;
+        var markers_string = "";
+
+        for(var i = 0; i < count; i += 1) {
+            var visit = gVisitList[i];
+            markers_string += "&markers=color:red%7Clabel:" + visit.id + "%7C" + visit.latitude + "," + visit.longitude;
+        }
+
+        /*var markers_string = "&markers=color:red%7Clabel:A%7C52.414487,-4.084870" +
         "&markers=color:blue%7Clabel:B%7C52.415969,-4.085358" +
-        "&markers=color:green%7Clabel:C%7C52.414098,-4.086624";
+        "&markers=color:green%7Clabel:C%7C52.414098,-4.086624";*/
     
         return markers_string;
     }
