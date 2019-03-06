@@ -52,7 +52,7 @@ Tourist.dataContext = (function ($) {
         var request = store.add(visit);
         request.onsuccess = function (event) {
             console.log("Added Record to DB, ID: " + event.target.result);
-            callabck();
+            callabck(event.target.result);
         };
     };
 

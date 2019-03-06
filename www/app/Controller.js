@@ -6,6 +6,7 @@ Tourist.controller = (function ($, dataContext, document) {
     var isCordovaApp = !!window.cordova;
     var position = null;
     var mapDisplayed = false;
+    var showMap = false;
     var currentMapWidth = 0;
     var currentMapHeight = 0;
     var visitsListSelector = "#visits-list-content";
@@ -29,7 +30,6 @@ Tourist.controller = (function ($, dataContext, document) {
     // rather to have no transition (i.e. tabbed behaviour)
     var initialisePage = function (event) {
         change_page_back_history();
-        initiate_geolocation();
     };
 
     var onPageChange = function (event, data) {
@@ -42,7 +42,8 @@ Tourist.controller = (function ($, dataContext, document) {
         // with new dimensions
         switch (toPageId) {
             case ADD_VISIT_PAGE_ID:
-                renderAddVisit();
+                showMap = false;
+                deal_with_geolocation();
                 break;
             case VISITS_LIST_PAGE_ID:
                 dataContext.allVisits(renderVisitsList);
@@ -53,6 +54,7 @@ Tourist.controller = (function ($, dataContext, document) {
                 }); //TODO plot visits!
                 if (!mapDisplayed || (currentMapWidth != get_map_width() ||
                     currentMapHeight != get_map_height())) {
+                    showMap = true;
                     deal_with_geolocation();
                 }
                 break;
@@ -324,10 +326,8 @@ Tourist.controller = (function ($, dataContext, document) {
         return $(window).width();
     }
 
-    var build_markers_string = function() {  //TODO Needs to be build based on the stored information we have in the DB.
+    var build_markers_string = function() {
 
-        //gVisitList
-        console.log("gVisitList Value: " + gVisitList);
         var markers_string = "";
 
         if (gVisitList != null) {
@@ -341,8 +341,68 @@ Tourist.controller = (function ($, dataContext, document) {
         return markers_string;
     }
 
-    var handle_geolocation_query = function (pos) {
+    /**
+     * Sets position Tourist instance variable and then either renders the map or add visit form based on showMap variable
+     * which is set in the onPageChange function.
+     * @param pos current position
+     */
+    var handle_geolocation_query = function(pos) {
         position = pos;
+
+        if (showMap) {
+            showStaticMap();
+        } else {
+            renderAddVisit();
+        }
+    }
+
+    /**
+     * example code https://wrightshq.com/playground/placing-multiple-markers-on-a-google-map-using-api-3/
+     */
+    var showEmbeddedMap = function() {
+        var map;
+        var bounds = new google.maps.LatLngBounds();
+        var uluru = {lat: position.coords.latitude, lng: position.coords.longitude};
+        var mapOptions = {
+            mapTypeId: 'roadmap',
+            center: uluru,
+            zoom: 4
+        };
+
+        jQuery('<div/>', {
+            id: 'map-div',
+            title: 'Google map of my location'
+        }).appendTo('#mapPos');
+
+        map =  new google.maps.Map(document.getElementById("map-div"), mapOptions);
+        map.setTilt(45);
+
+        var visits = gVisitList;
+
+        for(var i = 0; i < visits.length; i++) {
+            var markerPos = new google.maps.LatLng(parseFloat(visits[i].latitude), parseFloat(visits[i].longitude));
+            bounds.extend(markerPos);
+            var marker = new google.maps.Marker({
+                position: markerPos,
+                map: map,
+                title: visits[i].description
+            });
+            console.log("IM HERE");
+
+            //TODO, maybe add info page
+
+            map.fitBounds(bounds);
+        }
+
+        var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+            this.setZoom(14);
+            google.maps.event.removeListener(boundsListener);
+        });
+
+        mapDisplayed = true;
+    }
+
+    var showStaticMap = function () {
 
         var the_height = get_map_height();
         var the_width = get_map_width();
@@ -368,12 +428,17 @@ Tourist.controller = (function ($, dataContext, document) {
 
     /**
      * Clears the table once a Visit has been successfully added. Also notifys the user of this action.
+     * Callback for DataContext.addVisit() function.
      */
-    var visitAdded = function() {
+    var visitAdded = function(id) {
         renderAddVisit();
-        alert("New Visit Added");
+        alert("New Visit Added, ID: " + id);
     }
 
+    /**
+     * This function is called once a Submit event had been triggered on the new visit from.
+     * @param values values submitted by form
+     */
     var add_visit = function (values) {
 
         var visit = {
@@ -453,11 +518,13 @@ Tourist.controller = (function ($, dataContext, document) {
 // Called when jQuery Mobile is loaded and ready to use.
 $(document).on('mobileinit', $(document), function () {
     Tourist.controller.init();
-
-    
 });
 
 $(function() {
+
+    var script = document.createElement('script');
+    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD1Hqfruc_5GqAcUktoorhf5KnxOTkn_Xk";
+    document.body.appendChild(script);
 
     $('#newVisitForm').on('submit', function(event) {
         event.preventDefault();
