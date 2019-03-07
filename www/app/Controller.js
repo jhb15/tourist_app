@@ -18,9 +18,6 @@ Tourist.controller = (function ($, dataContext, document) {
         ADD_VISIT_PAGE_ID = "log_visit",
         MAP_PAGE = "map";
 
-    var pictureSource;   // picture source
-    var destinationType; // sets the format of returned value
-
     var gVisitList = null;
 
     // This changes the behaviour of the anchor <a> link
@@ -113,63 +110,6 @@ Tourist.controller = (function ($, dataContext, document) {
         }
     };
 
-    /*var renderVisitsList = function (visitsList) {
-
-        var view = $(visitsListSelector);
-
-        view.empty();
-
-        if (visitsList.length === 0) {
-
-            $(noVisitsCachedMsg).appendTo(view);
-        } else {
-
-            var liArray = [],
-                listItem,
-                visitsCount = visitsList.length,
-                visit,
-                i;
-
-            var filterForm = $("<form class=\"ui-filterable\">");
-            var inputField = $("<input id=\"myFilter\" data-type=\"search\" placeholder=\"Search for visits...\">");
-            inputField.appendTo(filterForm);
-            filterForm.appendTo(view);
-        
-            var ul = $("<ul id=\"visit-list\" data-role=\"listview\" data-filter=\"true\" data-input=\"#myFilter\"></ul>").appendTo(view);
-
-            for (i = 0; i < visitsCount; i += 1) {
-
-                listItem = "<li>";
-                visit = visitsList[i];
-                var date = new Date(visit.datetime);
-
-                listItem = listItem + "<a onclick=\"toggleMoreDetail(" + visit.id + ");\" href=\"\">";  //TODO make this show the notes from the visit.
-
-                liArray.push(listItemid
-                    + "<span class='visit-list-item'>"
-                    + "<img src=\"" + visit.photo_data + "\"></img>"
-                    + "<div>"
-                    + "<h3>" + visit.id + ". " + visit.description + "</h3>"
-                    + "<h6>Date: " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "</h6>"
-                    + "<h6>Time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "</h6>"
-                    + "</div>"
-                    + "<div id=\"more-detail-" + visit.id + "\" class=\"more-detail\">"
-                    + "<h6>Lat: " + visit.latitude + " Lon:" + visit.longitude + "</h6>" //Properly Format
-                    + "<h6>Notes: </h6>" //Properly Format
-                    + "<p>" + visit.notes + "</p>" //Properly Format
-                    + "</div>"
-                    + "</span>"
-                    + "</a>"
-                    + "</li>");
-            }
-            var listItems = liArray.join("");
-            $(listItems).appendTo(ul);
-
-
-            ul.listview();
-        }
-    };*/
-
     /**
      * Function for showing the more detail for a selected visit on the list page.
      * @param input object containing data to be passed to this function.
@@ -220,6 +160,7 @@ Tourist.controller = (function ($, dataContext, document) {
         form.trigger('create');
 
         document.getElementById("input_img").addEventListener("change", read_file);
+        //Maybe move submit event listner here?
 
     };
 
@@ -420,35 +361,6 @@ Tourist.controller = (function ($, dataContext, document) {
             this.setZoom(14);
             google.maps.event.removeListener(boundsListener);
         });
-
-        mapDisplayed = true;
-    };
-
-    /**
-     * !!!Depricated!!!, no longer needed as I have the embedded google maps working properly now.
-     * This function gets a static map of the users current position with markers where visits are
-     * recorded.
-     */
-    var showStaticMap = function () {
-
-        var the_height = get_map_height();
-        var the_width = get_map_width();
-
-        var markers = build_markers_string();
-
-        var image_url = 'https://maps.googleapis.com/maps/api/staticmap?center=' + position.coords.latitude + ',' +
-                      position.coords.longitude + '&zoom=14&size=' +
-                      the_width + 'x' + the_height + '&markers=color:blue|label:S|' +
-                      position.coords.latitude + ',' + position.coords.longitude + markers +
-                      '&key=AIzaSyD1Hqfruc_5GqAcUktoorhf5KnxOTkn_Xk';
-         
-        $('#map-img').remove();
-
-        jQuery('<img/>', {
-            id: 'map-img',
-            src: image_url,
-            title: 'Google map of my location'
-        }).appendTo('#mapPos');
 
         mapDisplayed = true;
     };
