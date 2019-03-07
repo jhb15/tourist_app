@@ -268,7 +268,7 @@ Tourist.controller = (function ($, dataContext, document) {
 
         // Do we have built-in support for geolocation (either native browser or phonegap)?]
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(handle_geolocation_query, handle_errors, {timeout: 10000, enableHighAccuracy: false});
+            navigator.geolocation.getCurrentPosition(handle_geolocation_query, handle_errors, {timeout: 15000, enableHighAccuracy: false});
         }
         else {
             // We don't so let's try a polyfill
@@ -357,13 +357,25 @@ Tourist.controller = (function ($, dataContext, document) {
         }
     }
 
+    var buildInfoPage = function(visit) {
+        var html = "<div class=\"info_content\">"
+            + "<h3>" + visit.id + ". " + visit.description + "</h3>"
+            + "<h4>Lat: " + visit.latitude + " Lng: " + visit.longitude + "</h4>"
+            + "<p>" + visit.notes + "</p>"
+            + "</div>";
+        return html;
+    };
+
     /**
-     * example code https://wrightshq.com/playground/placing-multiple-markers-on-a-google-map-using-api-3/
+     * This function is used to retrieve a map with the current location of the user and markers for where all
+     * the recorded visits happened.
+     * 
+     * derived from example code I found here:
+     * https://wrightshq.com/playground/placing-multiple-markers-on-a-google-map-using-api-3/
      */
     var showEmbeddedMap = function() {
         var map;
         var bounds = new google.maps.LatLngBounds();
-        //var uluru = {lat: position.coords.latitude, lng: position.coords.longitude};
         var mapOptions = {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
@@ -382,6 +394,7 @@ Tourist.controller = (function ($, dataContext, document) {
         map =  new google.maps.Map(mapCont, mapOptions);
 
         var visits = gVisitList;
+        var infoWindow = new google.maps.InfoWindow();
 
         for(var i = 0; i < visits.length; i++) {
             var markerPos = new google.maps.LatLng(parseFloat(visits[i].latitude), parseFloat(visits[i].longitude));
@@ -393,7 +406,12 @@ Tourist.controller = (function ($, dataContext, document) {
             });
             console.log("IM HERE");
 
-            //TODO, maybe add info page
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infoWindow.setContent(buildInfoPage(visits[i]));
+                    infoWindow.open(map, marker);
+                }
+            })(marker, i));
 
             map.fitBounds(bounds);
         }
@@ -403,10 +421,14 @@ Tourist.controller = (function ($, dataContext, document) {
             google.maps.event.removeListener(boundsListener);
         });
 
-        
         mapDisplayed = true;
-    }
+    };
 
+    /**
+     * !!!Depricated!!!, no longer needed as I have the embedded google maps working properly now.
+     * This function gets a static map of the users current position with markers where visits are
+     * recorded.
+     */
     var showStaticMap = function () {
 
         var the_height = get_map_height();
