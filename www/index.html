@@ -100,15 +100,13 @@
         </div>
 
     </header>
-    <section data-role="content">
-	    <section id="add_visit_section" role="main">
+    <section id="add_visit_section" role="application" data-role="content">
 	        <header>
 	            <h2>Log a Visit</h2>
             </header>
             <form id="newVisitForm" method="POST">
                 <!--Dynamically Added Form-->
             </form>
-        </section>
     </section>
     
     <footer data-role="footer" data-position="fixed" data-theme="b">
@@ -141,7 +139,7 @@
 
     </header>
     
-    <section data-role="content" class="indexPos" id="visits-list-content">
+    <section id="visits-list-content" role="application" data-role="content">
         <header>
             <h2>List of Visits</h2>
         </header>
@@ -170,7 +168,7 @@
 </article>
 
 <article id="map" role="document" aria-live="assertive" aria-atomic="true" data-role="page" data-title="Map of Visits">
-    <header class="page_header" role="banner" data-role="header" data-theme="b" data-position="fixed">
+    <header id="maptitle" class="page_header" role="banner" data-role="header" data-theme="b" data-position="fixed">
 
 		<div>
         	<h1>I'm A Tourist</h1>
@@ -179,7 +177,7 @@
     </header>
     
     <section id="mapPos" role="application" data-role="content">
-        <!-- Content is dynamically added -->
+            <!-- Dynamically Added Map -->
     </section>
     
     <footer id="mapfooter" data-role="footer" data-position="fixed" data-theme="b">

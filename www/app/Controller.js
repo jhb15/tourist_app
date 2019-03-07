@@ -319,6 +319,7 @@ Tourist.controller = (function ($, dataContext, document) {
     };
 
     var get_map_height = function () {
+        console.log("Title: " + $('#maptitle').height() + " Footer: " + $('#mapfooter').height());
         return $(window).height() - ($('#maptitle').height() + $('#mapfooter').height());
     }
 
@@ -350,7 +351,7 @@ Tourist.controller = (function ($, dataContext, document) {
         position = pos;
 
         if (showMap) {
-            showStaticMap();
+            showEmbeddedMap();
         } else {
             renderAddVisit();
         }
@@ -362,20 +363,23 @@ Tourist.controller = (function ($, dataContext, document) {
     var showEmbeddedMap = function() {
         var map;
         var bounds = new google.maps.LatLngBounds();
-        var uluru = {lat: position.coords.latitude, lng: position.coords.longitude};
+        //var uluru = {lat: position.coords.latitude, lng: position.coords.longitude};
         var mapOptions = {
-            mapTypeId: 'roadmap',
-            center: uluru,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
             zoom: 4
         };
 
         jQuery('<div/>', {
-            id: 'map-div',
+            id: 'map_container',
             title: 'Google map of my location'
         }).appendTo('#mapPos');
 
-        map =  new google.maps.Map(document.getElementById("map-div"), mapOptions);
-        map.setTilt(45);
+        $('#map_container').css({'height': get_map_height(), 'width': get_map_width()});
+
+        var mapCont = document.getElementById('map_container');
+
+        map =  new google.maps.Map(mapCont, mapOptions);
 
         var visits = gVisitList;
 
@@ -399,6 +403,7 @@ Tourist.controller = (function ($, dataContext, document) {
             google.maps.event.removeListener(boundsListener);
         });
 
+        
         mapDisplayed = true;
     }
 

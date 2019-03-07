@@ -12,6 +12,11 @@ body {
     font: 100% "Helvetica Neue", Helvetica, Tahoma, Arial, sans-serif;
 }
 
+#map_container {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
 #map {
     /* A hack to remove the scrollbar since height adjustments
     in Javascript overfilled by 0.5em */
