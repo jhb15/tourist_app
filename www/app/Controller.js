@@ -298,8 +298,14 @@ Tourist.controller = (function ($, dataContext, document) {
         }
     }
 
+    /**
+     * This function is used to generate some html that can be used on the Google Map to give the user some info
+     * about a marker when they clcik on it.
+     * @param visit visit that we want to create info content for
+     */
     var buildInfoPage = function(visit) {
         var html = "<div class=\"info_content\">"
+            //+ "<img src=\"" + visit.photo_data + "\" style=\"width: 75%; height: auto;\"></img>" //Do we need this?
             + "<h3>" + visit.id + ". " + visit.description + "</h3>"
             + "<h4>Lat: " + visit.latitude + " Lng: " + visit.longitude + "</h4>"
             + "<p>" + visit.notes + "</p>"
