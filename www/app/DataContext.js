@@ -60,7 +60,7 @@ Tourist.dataContext = (function ($) {
         var store = getObjectStrore(DB_OBJ_NAME, "readwrite");
         var request = store.getAll();
         request.onsuccess = function(event) {
-            console.log("All Data: " + event.target.result);
+            //console.log("All Data: " + event.target.result);
             callabck(event.target.result)
         };
     };
@@ -69,8 +69,8 @@ Tourist.dataContext = (function ($) {
         var store = getObjectStrore(DB_OBJ_NAME, "readwrite");
         var request = store.delete(id);
         request.onsuccess = function(event) {
-
-            callabck();
+            console.log("Removed Record from DB, ID: " + id);
+            callabck(id);
         };
     };
 

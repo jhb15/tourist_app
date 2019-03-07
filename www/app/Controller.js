@@ -100,7 +100,7 @@ Tourist.controller = (function ($, dataContext, document) {
                 $("<p>" + visit.notes + "</p>").appendTo(mDDiv);
                 
                 //$("<button>Edit</button>").appendTo(mDDiv); //For Future Use
-                //$("<button>Delete</button>").appendTo(mDDiv);
+                $("<button>Delete</button>").click({id}, removeVisit).appendTo(mDDiv);
 
                 listItem.appendTo(ul);
             }
@@ -380,6 +380,11 @@ Tourist.controller = (function ($, dataContext, document) {
         alert("New Visit Added, ID: " + id);
     }
 
+    var visitRemoved = function(id) {
+        dataContext.allVisits(renderVisitsList);
+        alert("Visit Removed, ID: " + id);
+    }
+
     /**
      * This function is called once a Submit event had been triggered on the new visit from.
      * @param values values submitted by form
@@ -398,6 +403,10 @@ Tourist.controller = (function ($, dataContext, document) {
         console.log(visit);
 
         dataContext.addVisit(visit, visitAdded);
+    }
+
+    var removeVisit = function(input) {
+        dataContext.deleteVisit(input.data.id, visitRemoved);
     }
 
     var read_file = function () {
