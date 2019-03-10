@@ -100,13 +100,6 @@ Tourist.controller = (function ($, dataContext, document) {
                 $("<h6>Date: " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "</h6>").appendTo(div);
                 $("<h6>Time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "</h6>").appendTo(div);
                 $("<br>").appendTo(span);
-                /*var mDDiv = $("<div id=\"more-detail-" + visit.id + "\" class=\"more-detail\">").appendTo(span);
-                $("<h6>Lat: " + visit.latitude + " Lon:" + visit.longitude + "</h6>").appendTo(mDDiv);
-                $("<h6>Notes: </h6>").appendTo(mDDiv);
-                $("<p>" + visit.notes + "</p>").appendTo(mDDiv);
-                
-                //$("<button>Edit</button>").appendTo(mDDiv); //For Future Use
-                $("<button>Delete</button>").click({id}, removeVisit).appendTo(mDDiv);*/
 
                 listItem.appendTo(ul);
             }
@@ -138,26 +131,6 @@ Tourist.controller = (function ($, dataContext, document) {
 
         $("<a class=\"ui-btn\" href=\"#visits\">Back</a>").appendTo(view);
         $("<a class=\"ui-btn\">Delete</a>").click({id: visit.id}, removeVisit).appendTo(view);
-    };
-
-    /**
-     * Function for showing the more detail for a selected visit on the list page.
-     * @param input object containing data to be passed to this function.
-     */
-    var toggleMoreDetail = function(input) {
-        var mDID = "more-detail-" + input.data.visit.id;
-        var moreDetailElement = document.getElementById(mDID);
-        if (moreDetailElement != null) {
-            var currentVal = moreDetailElement.style.display;
-            if (currentVal === 'none') {
-                moreDetailElement.style.display = 'block';
-            } else {
-                moreDetailElement.style.display = 'none';
-            }
-        } else {
-            console.log(id);
-            console.log("Error Toggleing MoreDetail, Visit ID:" + input.data.id);
-        }
     };
 
     /**
