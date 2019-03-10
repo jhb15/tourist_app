@@ -3,6 +3,7 @@ var Tourist = Tourist || {};
 Tourist.controller = (function ($, dataContext, document) {
     "use strict";
 
+    var mobileDevices = /(iPhone|iPod|iPad|Android|BlackBerry)/;
     var isCordovaApp = !!window.cordova;
     var position = null;
     var mapDisplayed = false;
@@ -29,6 +30,11 @@ Tourist.controller = (function ($, dataContext, document) {
         change_page_back_history();
     };
 
+    /**
+     * Function called by the page chenge event listner.
+     * @param event
+     * @param data
+     */
     var onPageChange = function (event, data) {
         // Find the id of the page
         var toPageId = data.toPage.attr("id");
@@ -130,6 +136,9 @@ Tourist.controller = (function ($, dataContext, document) {
         }
     };
 
+    /**
+     * Function for rendering a an Add Visit form.
+     */
     var renderAddVisit = function () {
         var form = $(newVisitFormSelector);
 
@@ -141,7 +150,7 @@ Tourist.controller = (function ($, dataContext, document) {
         $("<textarea name=\"notes\">Write notes here...</textarea></br>").appendTo(form);
         $("<label>Image</label>").appendTo(form);
 
-        if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+        if (navigator.userAgent.match(mobileDevices)) {
             if (isCordovaApp) {
                 //Phone Gap Image Capture
                 $("<button type=\"button\" id=\"take_pic_btn\">Capture Photo</button></br>").click(get_photo).appendTo(form);
@@ -170,6 +179,10 @@ Tourist.controller = (function ($, dataContext, document) {
         $(databaseNotInitialisedMsg).appendTo(view);
     }
 
+    /**
+     * Function for changeing page history so that when the user hits the page back button in browser they are taken
+     * to the site they started at before entering the application.
+     */
     var change_page_back_history = function () {
         $('a[data-role="tab"]').each(function () {
             var anchor = $(this);
@@ -186,8 +199,7 @@ Tourist.controller = (function ($, dataContext, document) {
     };
 
     var deal_with_geolocation = function () {
-        //var phoneGapApp = (document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1 );
-        if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+        if (navigator.userAgent.match(mobileDevices)) {
             // Running on a mobile. Will have to add to this list for other mobiles.
             // We need the above because the deviceready event is a phonegap event and
             // if we have access to PhoneGap we want to wait until it is ready before
@@ -268,21 +280,6 @@ Tourist.controller = (function ($, dataContext, document) {
         return $(window).width();
     }
 
-    var build_markers_string = function() {
-
-        var markers_string = "";
-
-        if (gVisitList != null) {
-            var count = gVisitList.length;
-            for(var i = 0; i < count; i += 1) {
-                var visit = gVisitList[i];
-                markers_string += "&markers=color:red%7Clabel:" + visit.id + "%7C" + visit.latitude + "," + visit.longitude;
-            }
-        }
-    
-        return markers_string;
-    }
-
     /**
      * Sets position Tourist instance variable and then either renders the map or add visit form based on showMap variable
      * which is set in the onPageChange function.
@@ -313,6 +310,27 @@ Tourist.controller = (function ($, dataContext, document) {
         return html;
     };
 
+    var addMarker = function(markerPos, map, infoWindow, bounds, title, infoWindowContent, icon) {
+        console.log("Building Marker, Lat: " + markerPos.lat() + ", Lng: " + markerPos.lng() + ", Title: " + title);
+            bounds.extend(markerPos);
+            var marker = new google.maps.Marker({
+                position: markerPos,
+                map: map,
+                title: title
+            });
+
+            if (icon != null) {
+                marker.setIcon(icon);
+            }
+
+            google.maps.event.addListener(marker, 'click', (function(marker) {
+                return function() {
+                    infoWindow.setContent(infoWindowContent);
+                    infoWindow.open(map, marker);
+                };
+            })(marker));
+    }
+
     /**
      * This function is used to retrieve a map with the current location of the user and markers for where all
      * the recorded visits happened.
@@ -339,26 +357,24 @@ Tourist.controller = (function ($, dataContext, document) {
         var mapCont = document.getElementById('map_container');
 
         map =  new google.maps.Map(mapCont, mapOptions);
+        var infoWindow = new google.maps.InfoWindow();
 
         var visits = gVisitList;
-        var infoWindow = new google.maps.InfoWindow();
+
+        var icon = {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: 'blue',
+            strokeColor: 'blue',
+            scale: 7.5
+        };
+        var currentPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+        addMarker(currentPos, map, infoWindow, bounds, "Current Position", "<div class=\"info_content\"><h2>You Are Here!</h2></div>", icon);
 
         for(var i = 0; i < visits.length; i++) {
             var markerPos = new google.maps.LatLng(parseFloat(visits[i].latitude), parseFloat(visits[i].longitude));
-            bounds.extend(markerPos);
-            var marker = new google.maps.Marker({
-                position: markerPos,
-                map: map,
-                title: visits[i].description
-            });
-            console.log("IM HERE");
-
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                    infoWindow.setContent(buildInfoPage(visits[i]));
-                    infoWindow.open(map, marker);
-                }
-            })(marker, i));
+            
+            addMarker(markerPos, map, infoWindow, bounds, visits[i].description, buildInfoPage(visits[i]), null);
 
             map.fitBounds(bounds);
         }
