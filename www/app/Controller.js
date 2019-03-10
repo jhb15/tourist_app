@@ -92,7 +92,7 @@ Tourist.controller = (function ($, dataContext, document) {
 
                 var listItem = $("<li>")
                 var a_tag = $("<a href=\"\">").appendTo(listItem);
-                a_tag.click({visit}, moreDetail);
+                a_tag.click({visit: visit}, moreDetail);
                 var span = $("<span class=\"visit-list-item\">").appendTo(a_tag);
                 $("<img src=\"" + visit.photo_data + "\">"). appendTo(span);
                 var div = $("<div>").appendTo(span);
@@ -128,6 +128,7 @@ Tourist.controller = (function ($, dataContext, document) {
         view.empty();
 
         $("<img src=\"" + visit.photo_data + "\">"). appendTo(view);
+        $("<h2>ID: " + visit.id + "</h2>").appendTo(view);
         $("<h2>" + visit.description + "</h2>").appendTo(view);
         $("<h6>Date: " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "</h6>").appendTo(view);
         $("<h6>Time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "</h6>").appendTo(view);
@@ -135,11 +136,9 @@ Tourist.controller = (function ($, dataContext, document) {
         $("<h6>Notes: </h6>").appendTo(view);
         $("<p>" + visit.notes + "</p>").appendTo(view);
 
-        $("<button>Back</button>").click(function() {
-            window.location = "#visits";
-        }).appendTo(view);
-        $("<button>Delete</button>").click({id: visit.id}, removeVisit).appendTo(view);
-    }
+        $("<a class=\"ui-btn\" href=\"#visits\">Back</a>").appendTo(view);
+        $("<a class=\"ui-btn\">Delete</a>").click({id: visit.id}, removeVisit).appendTo(view);
+    };
 
     /**
      * Function for showing the more detail for a selected visit on the list page.
