@@ -46,6 +46,7 @@ Tourist.controller = (function ($, dataContext, document) {
         switch (toPageId) {
             case ADD_VISIT_PAGE_ID:
                 showMap = false;
+                showGettingLocationMsg();
                 deal_with_geolocation();
                 break;
             case VISITS_LIST_PAGE_ID:
@@ -63,6 +64,15 @@ Tourist.controller = (function ($, dataContext, document) {
                 break;
         }
     };
+
+    var showGettingLocationMsg = function() {
+        var form = $(newVisitFormSelector);
+
+        form.empty();
+
+        $("<h4>Retrieving Current Location...</h4>").appendTo(form);
+        $("<p>Please wait for the form to dislay.</p>").appendTo(form);
+    }
 
     /**
      * Function for redering a list of visits to the screen when on the list page of the application. This is a modified version of the renderSessions
