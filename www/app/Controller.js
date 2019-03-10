@@ -133,10 +133,10 @@ Tourist.controller = (function ($, dataContext, document) {
         $("<img src=\"" + visit.photo_data + "\">"). appendTo(view);
         $("<h2>ID: " + visit.id + "</h2>").appendTo(view);
         $("<h2>" + visit.description + "</h2>").appendTo(view);
-        $("<h6>Date: " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "</h6>").appendTo(view);
-        $("<h6>Time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "</h6>").appendTo(view);
-        $("<h6>Lat: " + visit.latitude + " Lon:" + visit.longitude + "</h6>").appendTo(view);
-        $("<h6>Notes: </h6>").appendTo(view);
+        $("<h4>Date: " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "</h4>").appendTo(view);
+        $("<h4>Time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "</h4>").appendTo(view);
+        $("<h4>Lat: " + visit.latitude + " Lon:" + visit.longitude + "</h4>").appendTo(view);
+        $("<h4>Notes: </h4>").appendTo(view);
         $("<p>" + visit.notes + "</p>").appendTo(view);
 
         $("<a class=\"ui-btn\" href=\"#visits\">Back</a>").appendTo(view);
