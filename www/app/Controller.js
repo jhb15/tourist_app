@@ -92,7 +92,7 @@ Tourist.controller = (function ($, dataContext, document) {
 
                 var listItem = $("<li>")
                 var a_tag = $("<a href=\"\">").appendTo(listItem);
-                a_tag.click({id}, toggleMoreDetail);
+                a_tag.click({visit}, moreDetail);
                 var span = $("<span class=\"visit-list-item\">").appendTo(a_tag);
                 $("<img src=\"" + visit.photo_data + "\">"). appendTo(span);
                 var div = $("<div>").appendTo(span);
@@ -100,13 +100,13 @@ Tourist.controller = (function ($, dataContext, document) {
                 $("<h6>Date: " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "</h6>").appendTo(div);
                 $("<h6>Time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "</h6>").appendTo(div);
                 $("<br>").appendTo(span);
-                var mDDiv = $("<div id=\"more-detail-" + visit.id + "\" class=\"more-detail\">").appendTo(span);
+                /*var mDDiv = $("<div id=\"more-detail-" + visit.id + "\" class=\"more-detail\">").appendTo(span);
                 $("<h6>Lat: " + visit.latitude + " Lon:" + visit.longitude + "</h6>").appendTo(mDDiv);
                 $("<h6>Notes: </h6>").appendTo(mDDiv);
                 $("<p>" + visit.notes + "</p>").appendTo(mDDiv);
                 
                 //$("<button>Edit</button>").appendTo(mDDiv); //For Future Use
-                $("<button>Delete</button>").click({id}, removeVisit).appendTo(mDDiv);
+                $("<button>Delete</button>").click({id}, removeVisit).appendTo(mDDiv);*/
 
                 listItem.appendTo(ul);
             }
@@ -117,11 +117,36 @@ Tourist.controller = (function ($, dataContext, document) {
     };
 
     /**
+     * Function for clearing the Visit list page and replaceing it with a single visit record.
+     * @param input contains data passed into function, for this function a visit record is needed.
+     */
+    var moreDetail = function (input) {
+        var view = $(visitsListSelector);
+        var visit = input.data.visit;
+        var date = new Date(visit.datetime);
+        
+        view.empty();
+
+        $("<img src=\"" + visit.photo_data + "\">"). appendTo(view);
+        $("<h2>" + visit.description + "</h2>").appendTo(view);
+        $("<h6>Date: " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "</h6>").appendTo(view);
+        $("<h6>Time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "</h6>").appendTo(view);
+        $("<h6>Lat: " + visit.latitude + " Lon:" + visit.longitude + "</h6>").appendTo(view);
+        $("<h6>Notes: </h6>").appendTo(view);
+        $("<p>" + visit.notes + "</p>").appendTo(view);
+
+        $("<button>Back</button>").click(function() {
+            window.location = "#visits";
+        }).appendTo(view);
+        $("<button>Delete</button>").click({id: visit.id}, removeVisit).appendTo(view);
+    }
+
+    /**
      * Function for showing the more detail for a selected visit on the list page.
      * @param input object containing data to be passed to this function.
      */
     var toggleMoreDetail = function(input) {
-        var mDID = "more-detail-" + input.data.id;
+        var mDID = "more-detail-" + input.data.visit.id;
         var moreDetailElement = document.getElementById(mDID);
         if (moreDetailElement != null) {
             var currentVal = moreDetailElement.style.display;
@@ -422,6 +447,7 @@ Tourist.controller = (function ($, dataContext, document) {
     }
 
     var removeVisit = function(input) {
+        console.log(input);
         dataContext.deleteVisit(input.data.id, visitRemoved);
     }
 
