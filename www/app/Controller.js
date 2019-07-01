@@ -501,7 +501,7 @@ $(document).on('mobileinit', $(document), function () {
 $(function() {
 
     var script = document.createElement('script');
-    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD1Hqfruc_5GqAcUktoorhf5KnxOTkn_Xk";
+    script.src = "https://maps.googleapis.com/maps/api/js?key=GOOGLE_API_KEY_HERE";
     document.body.appendChild(script);
 
     $('#newVisitForm').on('submit', function(event) {
